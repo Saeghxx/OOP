@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Lab1 — JS-аналог Windows API проєкту</title>
+  <link rel="stylesheet" href="src/style/style.css">
+</head>
+<body>
+
+  <div id="menubar">
+    <button id="menuWork1">Робота1</button>
+    <button id="menuWork2">Робота2</button>
+    <button id="menuAbout">About</button>
+  </div>
+
+  <div id="mainWindow">
+    <canvas id="paintArea" width="600" height="200"></canvas>
+  </div>
+
+  <div id="dialogOverlay" class="hidden">
+    <div id="dialogBox"></div>
+  </div>
+
+  <script type="module" src="src/Lab1.js"></script>
+</body>
+</html>

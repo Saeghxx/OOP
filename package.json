@@ -1,0 +1,14 @@
+{
+  "name": "lab01",
+  "version": "1.0.0",
+  "description": "OOP Lab1 - JS analog of a Windows API modular project",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
