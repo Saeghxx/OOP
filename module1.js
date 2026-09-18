@@ -1,7 +1,9 @@
 export function Func_MOD1(overlay, dialogBox) {
   return new Promise((resolve) => {
 
-    const groups = ["ІП-01", "ІП-02", "ІП-03", "ІП-04", "ІО-01", "ІО-02"];
+    const groups = ["IM-51", "IM-52", "IM-53", "IM-54", "IM-55", "IM-56",
+       "IM-57", "IM-58", "IM-59", "IM-60", "IM-61", "IM-62", "IM-63", "IM-64", "IM-65", "IM-66",
+        "IM-67", "IM-68", "IM-69", "IM-70"];
 
     dialogBox.innerHTML = `
       <h3>Робота1 — оберіть групу (В1 = 3, ListBox)</h3>
