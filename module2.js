@@ -13,13 +13,13 @@ export function Func_MOD2(overlay, dialogBox) {
     const btnCancel = dialogBox.querySelector('#btnCancel2');
 
     overlay.classList.remove('hidden'); 
-    edit.focus();                      
+    edit.focus();                       
 
     function onOk() {
-     
+
       const text = edit.value.trim();
       close();
-      resolve(text.length > 0 ? text : 0); 
+      resolve(text.length > 0 ? text : 0);  
     }
 
     function onCancel() {
