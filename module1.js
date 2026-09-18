@@ -6,7 +6,7 @@ export function Func_MOD1(overlay, dialogBox) {
         "IM-67", "IM-68", "IM-69", "IM-70"];
 
     dialogBox.innerHTML = `
-      <h3>Робота1 — оберіть групу (В1 = 3, ListBox)</h3>
+      <h3>Робота1</h3>
       <select id="listBox" size="6" style="width:220px;"></select><br><br>
       <button id="btnOk1">Так</button>
       <button id="btnCancel1">Відміна</button>

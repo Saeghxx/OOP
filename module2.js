@@ -2,7 +2,7 @@ export function Func_MOD2(overlay, dialogBox) {
   return new Promise((resolve) => {
 
     dialogBox.innerHTML = `
-      <h3>Робота2 — введіть текст (В2 = 0, Edit Control)</h3>
+      <h3>Робота2</h3>
       <input type="text" id="editControl" style="width:220px;" placeholder="Введіть рядок тексту"><br><br>
       <button id="btnOk2">Так</button>
       <button id="btnCancel2">Відміна</button>
