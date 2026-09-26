@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Lab2</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎨</text></svg>">
+  <link rel="stylesheet" href="src/style/style.css">
+</head>
+<body>
+
+  <div id="menubar">
+    <div class="menu" id="menuFile">
+      <button class="menu-btn">Файл</button>
+      <div class="menu-dropdown">
+        <div class="menu-item" id="itemClear">Очистити</div>
+      </div>
+    </div>
+
+    <div class="menu" id="menuObjects">
+      <button class="menu-btn">Об'єкти</button>
+      <div class="menu-dropdown">
+        <div class="menu-item" data-shape="point"><span class="check"></span>Крапка</div>
+        <div class="menu-item" data-shape="line"><span class="check"></span>Лінія</div>
+        <div class="menu-item" data-shape="rect"><span class="check"></span>Прямокутник</div>
+        <div class="menu-item" data-shape="ellipse"><span class="check"></span>Еліпс</div>
+      </div>
+    </div>
+
+    <div class="menu" id="menuHelp">
+      <button class="menu-btn">Довідка</button>
+      <div class="menu-dropdown">
+        <div class="menu-item" id="itemAbout">Про програму</div>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="drawArea" width="800" height="500"></canvas>
+
+  <script type="module" src="src/lab2.js"></script>
+</body>
+</html>

@@ -1,5 +1,5 @@
-import { Func_MOD1 } from './module1.js';
-import { Func_MOD2 } from './module2.js';
+import { Func_MOD1 } from './modules/module1.js';
+import { Func_MOD2 } from './modules/module2.js';
 
 let lastText = "";
 
@@ -16,11 +16,10 @@ function onPaint() {
 }
 
 document.getElementById('menuWork1').addEventListener('click', () => {
-  
   Func_MOD1(overlay, dialogBox).then(result => {
-    if (result !== 0) {          
+    if (result !== 0) {
       lastText = result;
-      onPaint();                 
+      onPaint();
     }
   });
 });

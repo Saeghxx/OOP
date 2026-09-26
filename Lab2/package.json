@@ -1,0 +1,14 @@
+{
+  "name": "lab2",
+  "version": "1.0.0",
+  "description": "OOP Lab2 - graphics editor with Shape class hierarchy",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
