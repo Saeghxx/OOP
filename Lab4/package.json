@@ -1,0 +1,14 @@
+{
+  "name": "lab4",
+  "version": "1.0.0",
+  "description": "OOP Lab4 - improved editor structure with MyEditor class",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
