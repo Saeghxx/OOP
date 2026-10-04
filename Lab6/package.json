@@ -1,0 +1,13 @@
+{
+  "name": "lab6",
+  "version": "1.0.0",
+  "description": "OOP Lab6 - three independent programs communicating via clipboard",
+  "scripts": {
+    "start": "live-server --open=lab6/index.html"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "author": "",
+  "license": "ISC"
+}

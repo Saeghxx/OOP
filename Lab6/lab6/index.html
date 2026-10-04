@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Lab6</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗂️</text></svg>">
+  <link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+  <div id="titlebar">
+    <span>🗂️</span><span>Lab6 — менеджер</span>
+  </div>
+
+  <div class="content">
+    <p>Ця програма автоматично запускає <b>Object2</b> і <b>Object3</b> та
+       координує обмін даними між ними через буфер обміну.</p>
+
+    <button id="btnRun">Виконати</button>
+    <button id="btnStop">Завершити (закрити Object2 і Object3)</button>
+
+    <div id="status" class="status">Очікування запуску…</div>
+  </div>
+
+  <div id="dialogOverlay" class="hidden">
+    <div id="dialogBox">
+      <h3>Параметри для Object2 / Object3</h3>
+
+      <label>Кількість точок (nPoint)</label>
+      <input type="number" id="inNPoint" value="20" min="1" max="500">
+
+      <label>xMin</label>
+      <input type="number" id="inXMin" value="-10">
+
+      <label>xMax</label>
+      <input type="number" id="inXMax" value="10">
+
+      <label>yMin</label>
+      <input type="number" id="inYMin" value="-10">
+
+      <label>yMax</label>
+      <input type="number" id="inYMax" value="10">
+
+      <div class="dialog-buttons">
+        <button id="btnOk">Так</button>
+        <button id="btnCancel">Відміна</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="lab6.js"></script>
+</body>
+</html>

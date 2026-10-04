@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Object2</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔢</text></svg>">
+  <link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+  <div id="titlebar">
+    <span>🔢</span><span>Object2 — генератор точок</span>
+  </div>
+
+  <div class="content">
+    <p id="paramsInfo"></p>
+    <div id="status" class="status">Генерую точки…</div>
+    <div style="max-height: 260px; overflow-y: auto; margin-top: 10px;">
+      <table>
+        <thead><tr><th>#</th><th>x</th><th>y</th></tr></thead>
+        <tbody id="pointsBody"></tbody>
+      </table>
+    </div>
+    <button id="btnCopyManual" style="display:none; margin-top:10px;">
+  
+    </button>
+  </div>
+
+  <script src="object2.js"></script>
+</body>
+</html>
