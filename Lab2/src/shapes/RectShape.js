@@ -14,6 +14,6 @@ export class RectShape extends Shape {
     const h = Math.abs(this.y2 - this.y1);
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
-    ctx.strokeRect(x, y, w, h); // без заповнення — тільки контур
+    ctx.strokeRect(x, y, w, h); 
   }
 }
