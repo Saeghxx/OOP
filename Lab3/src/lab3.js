@@ -19,6 +19,8 @@ const SHAPE_NAMES = {
   ellipse: 'Еліпс'
 };
 
+const shapeClasses = { line: LineShape, rect: RectShape, ellipse: EllipseShape };
+
 let isDragging = false;
 let startX = 0, startY = 0;
 
@@ -28,10 +30,10 @@ function updateTitle() {
 
 function setShapeType(type) {
   currentShapeType = type;
-  updateTitle(); 
+  updateTitle();
 }
 
-updateTitle(); 
+updateTitle();
 
 document.querySelectorAll('.menu-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
@@ -73,34 +75,6 @@ function getMousePos(e) {
   return { x: e.clientX - rect.left, y: e.clientY - rect.top };
 }
 
-function drawRubberBand(x1, y1, x2, y2) {
-  ctx.save();
-  ctx.strokeStyle = "red";
-  ctx.setLineDash([]); 
-  ctx.lineWidth = 1;
-
-  if (currentShapeType === 'line') {
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-
-  } else if (currentShapeType === 'rect') {
-   
-    const halfW = Math.abs(x2 - x1), halfH = Math.abs(y2 - y1);
-    ctx.strokeRect(x1 - halfW, y1 - halfH, halfW * 2, halfH * 2);
-
-  } else if (currentShapeType === 'ellipse') {
-  
-    const cx = (x1 + x2) / 2, cy = (y1 + y2) / 2;
-    const rx = Math.abs(x2 - x1) / 2, ry = Math.abs(y2 - y1) / 2;
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, Math.max(rx, 1), Math.max(ry, 1), 0, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
 canvas.addEventListener('mousedown', (e) => {
   const { x, y } = getMousePos(e);
 
@@ -119,7 +93,7 @@ canvas.addEventListener('mousemove', (e) => {
   if (!isDragging) return;
   const { x, y } = getMousePos(e);
   redraw();
-  drawRubberBand(startX, startY, x, y);
+  shapeClasses[currentShapeType].Rubber(ctx, startX, startY, x, y);
 });
 
 canvas.addEventListener('mouseup', (e) => {
@@ -127,18 +101,9 @@ canvas.addEventListener('mouseup', (e) => {
   isDragging = false;
   const { x, y } = getMousePos(e);
 
-  let newShape = null;
-  if (currentShapeType === 'line') {
-    newShape = new LineShape(startX, startY, x, y);
-  } else if (currentShapeType === 'rect') {
-   
-    newShape = new RectShape(startX, startY, x, y);
-  } else if (currentShapeType === 'ellipse') {
- 
-    newShape = new EllipseShape(startX, startY, x, y);
-  }
+  const ShapeClass = shapeClasses[currentShapeType];
+  if (ShapeClass) shapes.push(new ShapeClass(startX, startY, x, y));
 
-  if (newShape) shapes.push(newShape);
   redraw();
 });
 

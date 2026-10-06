@@ -15,4 +15,16 @@ export class LineShape extends Shape {
     ctx.lineTo(this.x2, this.y2);
     ctx.stroke();
   }
+
+  static Rubber(ctx, x1, y1, x2, y2) {
+    ctx.save();
+    ctx.strokeStyle = "red";
+    ctx.setLineDash([]);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.restore();
+  }
 }

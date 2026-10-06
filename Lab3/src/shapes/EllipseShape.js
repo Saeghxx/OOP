@@ -17,6 +17,19 @@ export class EllipseShape extends Shape {
     ctx.ellipse(cx, cy, Math.max(rx, 1), Math.max(ry, 1), 0, 0, Math.PI * 2);
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
-    ctx.stroke(); 
+    ctx.stroke();
+  }
+
+  static Rubber(ctx, x1, y1, x2, y2) {
+    const cx = (x1 + x2) / 2, cy = (y1 + y2) / 2;
+    const rx = Math.abs(x2 - x1) / 2, ry = Math.abs(y2 - y1) / 2;
+    ctx.save();
+    ctx.strokeStyle = "red";
+    ctx.setLineDash([]);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, Math.max(rx, 1), Math.max(ry, 1), 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
   }
 }

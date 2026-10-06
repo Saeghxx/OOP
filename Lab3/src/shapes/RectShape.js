@@ -21,4 +21,15 @@ export class RectShape extends Shape {
     ctx.lineWidth = 1;
     ctx.strokeRect(x, y, w, h);
   }
+
+  static Rubber(ctx, x1, y1, x2, y2) {
+    const halfW = Math.abs(x2 - x1);
+    const halfH = Math.abs(y2 - y1);
+    ctx.save();
+    ctx.strokeStyle = "red";
+    ctx.setLineDash([]);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x1 - halfW, y1 - halfH, halfW * 2, halfH * 2);
+    ctx.restore();
+  }
 }
