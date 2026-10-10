@@ -1,11 +1,13 @@
 import { Shape } from './Shape.js';
 
+
 export class PointShape extends Shape {
   constructor(x, y) {
     super();
     this.x = x;
     this.y = y;
   }
+
 
   Show(ctx) {
     ctx.fillStyle = "black";
