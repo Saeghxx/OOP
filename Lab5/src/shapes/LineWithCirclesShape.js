@@ -1,9 +1,7 @@
 import { Shape } from './Shape.js';
 import { LineShape } from './LineShape.js';
 import { EllipseShape } from './EllipseShape.js';
-
 const CIRCLE_RADIUS = 6;
-
 export class LineWithCirclesShape extends Shape {
   constructor(x1, y1, x2, y2) {
     super();
@@ -13,13 +11,11 @@ export class LineWithCirclesShape extends Shape {
     this._circle2 = new EllipseShape(x2 - r, y2 - r, x2 + r, y2 + r);
   }
 
-  Show(ctx) {
-    this._line.Show(ctx);
-    this._circle1.Show(ctx);
-    this._circle2.Show(ctx);
+  Show(ctx, preview = false) {
+    this._line.Show(ctx, preview);
+    this._circle1.Show(ctx, preview);
+    this._circle2.Show(ctx, preview);
   }
-
   getTypeName() { return "Лінія з кружечками"; }
-
   getBounds() { return this._line.getBounds(); }
 }

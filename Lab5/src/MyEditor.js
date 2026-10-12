@@ -14,31 +14,26 @@ const SHAPE_NAMES = {
 };
 
 export class MyEditor {
-  
   static _instance = null;
 
   constructor(canvas, titleEl) {
-   
     if (MyEditor._instance) {
       throw new Error("MyEditor вже існує — використовуйте MyEditor.getInstance()");
     }
-
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.titleEl = titleEl;
-
     this.shapes = new ShapeContainer();
     this.currentShapeType = 'rect';
     this.isDragging = false;
     this.startX = 0;
     this.startY = 0;
-    this.selectedIndex = null; 
+    this.selectedIndex = null;
 
     this._onMouseDown = this._onMouseDown.bind(this);
     this._onMouseMove = this._onMouseMove.bind(this);
     this._onMouseUp = this._onMouseUp.bind(this);
     this._onMouseLeave = this._onMouseLeave.bind(this);
-
     this.canvas.addEventListener('mousedown', this._onMouseDown);
     this.canvas.addEventListener('mousemove', this._onMouseMove);
     this.canvas.addEventListener('mouseup', this._onMouseUp);
@@ -51,14 +46,13 @@ export class MyEditor {
 
     this._updateTitle();
     this.redraw();
-
-    MyEditor._instance = this; 
+    MyEditor._instance = this;
     console.log("MyEditor: єдиний екземпляр створено (класичний Singleton)");
   }
 
   static getInstance(canvas, titleEl) {
     if (!MyEditor._instance) {
-      new MyEditor(canvas, titleEl); 
+      new MyEditor(canvas, titleEl);
     }
     return MyEditor._instance;
   }
@@ -109,28 +103,24 @@ export class MyEditor {
     return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
 
+  _createShape(type, x1, y1, x2, y2) {
+    switch (type) {
+      case 'line':        return new LineShape(x1, y1, x2, y2);
+      case 'rect':        return new RectShape(x1, y1, x2, y2);
+      case 'ellipse':     return new EllipseShape(x1, y1, x2, y2);
+      case 'linecircles': return new LineWithCirclesShape(x1, y1, x2, y2);
+      case 'cube':        return new CubeWireframeShape(x1, y1, x2, y2);
+      default:            return null;
+    }
+  }
+
   _drawRubberBand(x1, y1, x2, y2) {
+    const shape = this._createShape(this.currentShapeType, x1, y1, x2, y2);
+    if (!shape) return;
     const ctx = this.ctx;
     ctx.save();
-    ctx.strokeStyle = 'black';
     ctx.setLineDash([5, 5]);
-    ctx.lineWidth = 1;
-
-    if (this.currentShapeType === 'line' || this.currentShapeType === 'linecircles') {
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-    } else if (this.currentShapeType === 'rect' || this.currentShapeType === 'cube') {
-      const halfW = Math.abs(x2 - x1), halfH = Math.abs(y2 - y1);
-      ctx.strokeRect(x1 - halfW, y1 - halfH, halfW * 2, halfH * 2);
-    } else if (this.currentShapeType === 'ellipse') {
-      const cx = (x1 + x2) / 2, cy = (y1 + y2) / 2;
-      const rx = Math.abs(x2 - x1) / 2, ry = Math.abs(y2 - y1) / 2;
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, Math.max(rx, 1), Math.max(ry, 1), 0, 0, Math.PI * 2);
-      ctx.stroke();
-    }
+    shape.Show(ctx, true);
     ctx.restore();
   }
 
@@ -174,15 +164,7 @@ export class MyEditor {
     if (!this.isDragging) return;
     this.isDragging = false;
     const { x, y } = this._getMousePos(e);
-
-    let shape = null;
-    switch (this.currentShapeType) {
-      case 'line':        shape = new LineShape(this.startX, this.startY, x, y); break;
-      case 'rect':         shape = new RectShape(this.startX, this.startY, x, y); break;
-      case 'ellipse':      shape = new EllipseShape(this.startX, this.startY, x, y); break;
-      case 'linecircles':  shape = new LineWithCirclesShape(this.startX, this.startY, x, y); break;
-      case 'cube':         shape = new CubeWireframeShape(this.startX, this.startY, x, y); break;
-    }
+    const shape = this._createShape(this.currentShapeType, this.startX, this.startY, x, y);
     if (shape) {
       this.shapes.push(shape);
       this._refreshTable();
