@@ -6,12 +6,16 @@ import { LineWithCirclesShape } from './shapes/LineWithCirclesShape.js';
 import { CubeWireframeShape } from './shapes/CubeWireframeShape.js';
 import { ShapeContainer } from './shapes/shapeContainer.js';
 import { MyTable } from './shapes/MyTable.js';
-import { rowsToCSV, downloadCSV } from './shapes/csvExport.js';
+import { rowsToCSV, downloadCSV, csvToRows } from './shapes/csvExport.js';
 
 const SHAPE_NAMES = {
   point: 'Крапка', line: 'Лінія', rect: 'Прямокутник', ellipse: 'Еліпс',
   linecircles: 'Лінія з кружечками', cube: 'Каркас куба'
 };
+
+const TYPE_BY_NAME = Object.fromEntries(
+  Object.entries(SHAPE_NAMES).map(([key, name]) => [name, key])
+);
 
 export class MyEditor {
   static _instance = null;
@@ -34,18 +38,24 @@ export class MyEditor {
     this._onMouseMove = this._onMouseMove.bind(this);
     this._onMouseUp = this._onMouseUp.bind(this);
     this._onMouseLeave = this._onMouseLeave.bind(this);
+
     this.canvas.addEventListener('mousedown', this._onMouseDown);
     this.canvas.addEventListener('mousemove', this._onMouseMove);
     this.canvas.addEventListener('mouseup', this._onMouseUp);
     this.canvas.addEventListener('mouseleave', this._onMouseLeave);
 
-    this.table = new MyTable(document.body, (index) => {
-      this.selectedIndex = index;
-      this.redraw();
-    });
+    this.table = new MyTable(
+      document.body,
+      (index) => {
+        this.selectedIndex = index;
+        this.redraw();
+      },
+      (index) => this.deleteShape(index)
+    );
 
     this._updateTitle();
     this.redraw();
+
     MyEditor._instance = this;
     console.log("MyEditor: єдиний екземпляр створено (класичний Singleton)");
   }
@@ -76,8 +86,42 @@ export class MyEditor {
     this._refreshTable();
   }
 
+  deleteShape(index) {
+    if (!this.shapes.remove(index)) return;
+    this.selectedIndex = null;
+    this.redraw();
+    this._refreshTable();
+  }
+
   exportCSV() {
     downloadCSV('shapes.csv', rowsToCSV(this._getRows()));
+  }
+
+  importCSV(text) {
+    const { rows, skipped: badLines } = csvToRows(text);
+
+    const loaded = [];
+    let skipped = badLines;
+    for (const row of rows) {
+      const shape = this._createFromRow(row);
+      if (shape) loaded.push(shape);
+      else skipped++;         
+    }
+
+    if (loaded.length === 0) return { added: 0, skipped, overflow: 0 };
+
+    this.shapes.clear();
+    this.selectedIndex = null;
+    let added = 0;
+    let overflow = 0;
+    for (const shape of loaded) {
+      if (this.shapes.push(shape)) added++;
+      else overflow++;        
+    }
+
+    this.redraw();
+    this._refreshTable();
+    return { added, skipped, overflow };
   }
 
   _getRows() {
@@ -89,7 +133,7 @@ export class MyEditor {
   }
 
   _refreshTable() {
-    this.table.setRows(this._getRows());
+    this.table.setRows(this._getRows(), this.selectedIndex);
   }
 
   _updateTitle() {
@@ -111,6 +155,15 @@ export class MyEditor {
       case 'linecircles': return new LineWithCirclesShape(x1, y1, x2, y2);
       case 'cube':        return new CubeWireframeShape(x1, y1, x2, y2);
       default:            return null;
+    }
+  }
+
+  _createFromRow({ name, x1, y1, x2, y2 }) {
+    const type = TYPE_BY_NAME[name];
+    switch (type) {
+      case 'point': return new PointShape(x1, y1);
+      case 'rect':  return new RectShape((x1 + x2) / 2, (y1 + y2) / 2, x2, y2);
+      default:      return this._createShape(type, x1, y1, x2, y2);
     }
   }
 

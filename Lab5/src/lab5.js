@@ -22,6 +22,7 @@ document.addEventListener('click', () => {
 document.querySelectorAll('#menuObjects .menu-item[data-shape]').forEach(item => {
   item.addEventListener('click', () => editor.setShapeType(item.dataset.shape));
 });
+
 document.querySelectorAll('#toolbar .tool-btn[data-shape]').forEach(btn => {
   btn.addEventListener('click', () => editor.setShapeType(btn.dataset.shape));
 });
@@ -34,6 +35,33 @@ document.getElementById('itemToggleTable').addEventListener('click', () => {
 
 document.getElementById('itemExportCSV').addEventListener('click', () => {
   editor.exportCSV();
+});
+
+const csvInput = document.getElementById('csvFileInput');
+
+document.getElementById('itemImportCSV').addEventListener('click', () => {
+  csvInput.click();
+});
+
+csvInput.addEventListener('change', async () => {
+  const file = csvInput.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const { added, skipped, overflow } = editor.importCSV(text);
+    if (added === 0) {
+      alert("У файлі не знайдено жодного коректного об'єкта. Поточне зображення не змінено.");
+    } else {
+      let msg = `Завантажено об'єктів: ${added}.`;
+      if (skipped) msg += `\nПропущено некоректних рядків: ${skipped}.`;
+      if (overflow) msg += `\nНе вмістилось у масив (перевищено N): ${overflow}.`;
+      alert(msg);
+    }
+  } catch (err) {
+    alert("Не вдалося прочитати файл: " + err.message);
+  } finally {
+    csvInput.value = '';  
+  }
 });
 
 document.getElementById('itemAbout').addEventListener('click', () => {

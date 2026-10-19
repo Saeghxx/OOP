@@ -1,7 +1,10 @@
 export class MyTable {
-  constructor(container, onRowSelect) {
-    this._onRowSelect = onRowSelect; 
+
+  constructor(container, onRowSelect, onRowDelete) {
+    this._onRowSelect = onRowSelect;
+    this._onRowDelete = onRowDelete;
     this._isOpen = false;
+    this._selected = null;
     this._buildDOM(container);
   }
 
@@ -9,7 +12,7 @@ export class MyTable {
     this._panel = document.createElement('div');
     this._panel.id = 'myTablePanel';
     this._panel.className = 'my-table-panel hidden';
-
+    this._panel.tabIndex = -1;
     this._panel.innerHTML = `
       <div class="my-table-header">
         <span>Таблиця об'єктів</span>
@@ -23,12 +26,32 @@ export class MyTable {
           <tbody></tbody>
         </table>
       </div>
+      <div class="my-table-footer">
+        <button class="my-table-delete" disabled title="Видалити виділений об'єкт (Delete)">Видалити виділений</button>
+      </div>
     `;
-
     container.appendChild(this._panel);
-
     this._tbody = this._panel.querySelector('tbody');
+    this._deleteBtn = this._panel.querySelector('.my-table-delete');
+
     this._panel.querySelector('.my-table-close').addEventListener('click', () => this.close());
+    this._deleteBtn.addEventListener('click', () => this._deleteSelected());
+    this._panel.addEventListener('keydown', (e) => {
+      if (e.key === 'Delete') this._deleteSelected();
+    });
+  }
+
+  _deleteSelected() {
+    if (this._selected === null) return;
+    if (this._onRowDelete) this._onRowDelete(this._selected);
+  }
+
+  _markSelected(index) {
+    this._selected = index;
+    this._tbody.querySelectorAll('tr').forEach((r, i) => {
+      r.classList.toggle('selected', i === index);
+    });
+    this._deleteBtn.disabled = (index === null);
   }
 
   open() {
@@ -49,7 +72,7 @@ export class MyTable {
     return this._isOpen;
   }
 
-  setRows(rows) {
+  setRows(rows, selectedIndex = null) {
     this._tbody.innerHTML = '';
     rows.forEach((row, i) => {
       const tr = document.createElement('tr');
@@ -61,11 +84,13 @@ export class MyTable {
         <td>${Math.round(row.y2)}</td>
       `;
       tr.addEventListener('click', () => {
-        this._tbody.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
-        tr.classList.add('selected');
-        if (this._onRowSelect) this._onRowSelect(i); 
+        this._markSelected(i);
+        this._panel.focus();
+        if (this._onRowSelect) this._onRowSelect(i);
       });
       this._tbody.appendChild(tr);
     });
+    const valid = selectedIndex !== null && selectedIndex < rows.length;
+    this._markSelected(valid ? selectedIndex : null);
   }
 }

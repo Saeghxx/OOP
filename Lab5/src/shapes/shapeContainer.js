@@ -10,9 +10,19 @@ export class ShapeContainer {
   push(shape) {
     if (this._count >= this._capacity) {
       console.warn(`Масив заповнено (N=${this._capacity}), нову фігуру не додано`);
-      return;
+      return false;
     }
     this._array[this._count++] = shape;
+    return true;
+  }
+
+  remove(index) {
+    if (index < 0 || index >= this._count) return false;
+    for (let i = index; i < this._count - 1; i++) {
+      this._array[i] = this._array[i + 1];
+    }
+    this._array[--this._count] = undefined;
+    return true;
   }
 
   get(index) {
@@ -21,6 +31,10 @@ export class ShapeContainer {
 
   get count() {
     return this._count;
+  }
+
+  get capacity() {
+    return this._capacity;
   }
 
   forEach(callback) {

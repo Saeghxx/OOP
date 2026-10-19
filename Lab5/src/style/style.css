@@ -117,6 +117,7 @@ canvas {
   display: flex;
   flex-direction: column;
   z-index: 50;
+  outline: none;
 }
 
 .my-table-panel.hidden {
@@ -173,4 +174,33 @@ canvas {
 
 .my-table-body tr.selected {
   background: #cfe4ff;
+}
+
+.my-table-footer {
+  border-top: 1px solid #ddd;
+  padding: 6px 8px;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.my-table-delete {
+  background: white;
+  border: 1px solid rgb(255, 0, 204);
+  color: rgb(255, 0, 204);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.my-table-delete:hover:not(:disabled) {
+  background: rgb(255, 0, 204);
+  color: white;
+}
+
+.my-table-delete:disabled {
+  border-color: #ccc;
+  color: #aaa;
+  cursor: default;
 }
