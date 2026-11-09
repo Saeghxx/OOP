@@ -1,0 +1,10 @@
+{
+  "name": "rgr-vector-editor",
+  "version": "1.0.0",
+  "description": "РГР №4. Векторний графічний редактор",
+  "type": "module",
+  "scripts": {
+    "start": "npx http-server . -p 8000 -o"
+  },
+  "license": "ISC"
+}

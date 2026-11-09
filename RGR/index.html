@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Векторний графічний редактор</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Segoe UI,Arial,sans-serif;font-size:14px}
+body{display:flex;flex-direction:column;background:#e8e8e8}
+#menu{display:flex;background:#f3f3f3;border-bottom:1px solid #bbb;position:relative}
+.mi{position:relative}
+.mi>button{border:0;background:none;padding:6px 14px;cursor:pointer;font:inherit}
+.mi:hover>button{background:#dde}
+.dd{display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid #aaa;min-width:170px;z-index:20}
+.mi:hover .dd{display:block}
+.dd button{display:block;width:100%;text-align:left;border:0;background:none;padding:7px 14px;cursor:pointer;font:inherit}
+.dd button:hover{background:#cde}
+#toolbar{display:flex;gap:4px;padding:5px;background:#f8f8f8;border-bottom:1px solid #bbb;flex-wrap:wrap;align-items:center}
+.tb{position:relative;width:38px;height:34px;border:1px solid #bbb;background:#fff;border-radius:4px;cursor:pointer;padding:2px}
+.tb:hover{background:#eef}
+.tb.on{background:#bcd7ff;border-color:#2a6fd6}
+.tb svg{width:100%;height:100%}
+.tb::after{content:attr(data-tip);position:absolute;top:110%;left:0;background:#333;color:#fff;padding:3px 7px;border-radius:3px;font-size:12px;white-space:nowrap;display:none;z-index:30;pointer-events:none}
+.tb:hover::after{display:block}
+#viewer{flex:1;overflow:auto;background:#999}
+canvas{background:#fff;display:block;cursor:crosshair}
+#status{padding:3px 10px;background:#f3f3f3;border-top:1px solid #bbb;font-size:12px}
+</style>
+</head>
+<body>
+<div id="menu"></div>
+<div id="toolbar"></div>
+<div id="viewer"><canvas id="cv" width="2000" height="2000"></canvas></div>
+<div id="status">Готово</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
