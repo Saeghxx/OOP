@@ -4,36 +4,38 @@ const statusEl = document.getElementById('status');
 const manualFallback = document.getElementById('manualFallback');
 
 async function readFromClipboard() {
+  let text;
   try {
-    const text = await navigator.clipboard.readText();
-    if (!text || !text.trim()) throw new Error('empty');
-    handleData(text);
+    text = await navigator.clipboard.readText();
   } catch (err) {
- 
     statusEl.textContent =
       'Не вдалося автоматично прочитати буфер обміну (браузер заблокував доступ).';
     statusEl.className = 'status error';
     manualFallback.style.display = 'block';
+    return;
   }
+ 
+  handleData(text);
 }
 
 function parsePoints(text) {
   return text
     .trim()
-    .split('\n')
+    .split(/\r?\n/)
     .map(line => {
-      const [x, y] = line.split(',').map(Number);
-      return { x, y };
+      const parts = line.split(',');
+      if (parts.length < 2 || parts[1].trim() === '') return null;
+      return { x: Number(parts[0]), y: Number(parts[1]) };
     })
-    .filter(p => !Number.isNaN(p.x) && !Number.isNaN(p.y));
+    .filter(p => p && Number.isFinite(p.x) && Number.isFinite(p.y));
 }
 
 function handleData(text) {
-  const points = parsePoints(text);
+  const points = parsePoints(text || '');
   if (points.length === 0) {
+   
     statusEl.textContent = 'У буфері обміну немає коректних даних.';
     statusEl.className = 'status error';
-    manualFallback.style.display = 'block';
     return;
   }
 
@@ -66,7 +68,7 @@ function drawGraph(points) {
   ctx.moveTo(pad, canvas.height - pad);
   ctx.lineTo(canvas.width - pad, canvas.height - pad); 
   ctx.moveTo(pad, pad);
-  ctx.lineTo(pad, canvas.height - pad); // вісь Y
+  ctx.lineTo(pad, canvas.height - pad); 
   ctx.stroke();
 
   ctx.fillStyle = 'black';
