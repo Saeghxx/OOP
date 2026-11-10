@@ -69,10 +69,10 @@ export class Cube extends Shape {
     const b = this.box(), d = Math.min(b.w, b.h) * 0.3; this.style(ctx);
     const fx = b.x, fy = b.y + d, fw = b.w - d, fh = b.h - d;
     ctx.fillRect(fx, fy, fw, fh); ctx.strokeRect(fx, fy, fw, fh);
-    ctx.beginPath(); // верхня грань
+    ctx.beginPath(); 
     ctx.moveTo(fx, fy); ctx.lineTo(fx + d, b.y); ctx.lineTo(b.x + b.w, b.y);
     ctx.lineTo(fx + fw, fy); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); // права грань
+    ctx.beginPath(); 
     ctx.moveTo(fx + fw, fy); ctx.lineTo(b.x + b.w, b.y);
     ctx.lineTo(b.x + b.w, b.y + fh); ctx.lineTo(fx + fw, fy + fh);
     ctx.closePath(); ctx.fill(); ctx.stroke();
