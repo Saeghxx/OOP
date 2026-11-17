@@ -1,5 +1,4 @@
 export class MyTable {
-
   constructor(container, onRowSelect, onRowDelete) {
     this._onRowSelect = onRowSelect;
     this._onRowDelete = onRowDelete;
@@ -31,6 +30,7 @@ export class MyTable {
       </div>
     `;
     container.appendChild(this._panel);
+
     this._tbody = this._panel.querySelector('tbody');
     this._deleteBtn = this._panel.querySelector('.my-table-delete');
 

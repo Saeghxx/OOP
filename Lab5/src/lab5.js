@@ -1,9 +1,19 @@
-import { MyEditor } from './MyEditor.js';
+import { MyEditor } from './editor/MyEditor.js';
+import { MyTable } from './ui/MyTable.js';
 
 const canvas = document.getElementById('drawArea');
 const titleText = document.getElementById('titleText');
 
-let editor = MyEditor.getInstance(canvas, titleText);
+const editor = MyEditor.getInstance(canvas, titleText);
+
+
+const table = new MyTable(
+  document.body,
+  (index) => editor.selectShape(index),   
+  (index) => editor.deleteShape(index)  
+);
+
+editor.onShapesChange = (rows, selectedIndex) => table.setRows(rows, selectedIndex);
 
 document.querySelectorAll('.menu-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
@@ -30,7 +40,7 @@ document.querySelectorAll('#toolbar .tool-btn[data-shape]').forEach(btn => {
 document.getElementById('itemClear').addEventListener('click', () => editor.clear());
 
 document.getElementById('itemToggleTable').addEventListener('click', () => {
-  editor.table.toggle();
+  table.toggle();
 });
 
 document.getElementById('itemExportCSV').addEventListener('click', () => {
@@ -60,7 +70,7 @@ csvInput.addEventListener('change', async () => {
   } catch (err) {
     alert("Не вдалося прочитати файл: " + err.message);
   } finally {
-    csvInput.value = '';  
+    csvInput.value = '';
   }
 });
 
@@ -72,6 +82,7 @@ document.getElementById('itemAbout').addEventListener('click', () => {
 });
 
 document.getElementById('itemExit').addEventListener('click', () => {
+  table.close();                
   MyEditor.destroyInstance();
   alert(
     "Програму завершено: MyEditor і вікно таблиці знищено.\n" +

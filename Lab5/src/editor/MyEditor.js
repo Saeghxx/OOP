@@ -1,12 +1,11 @@
-import { PointShape } from './shapes/PointShape.js';
-import { LineShape } from './shapes/LineShape.js';
-import { RectShape } from './shapes/RectShape.js';
-import { EllipseShape } from './shapes/EllipseShape.js';
-import { LineWithCirclesShape } from './shapes/LineWithCirclesShape.js';
-import { CubeWireframeShape } from './shapes/CubeWireframeShape.js';
-import { ShapeContainer } from './shapes/shapeContainer.js';
-import { MyTable } from './shapes/MyTable.js';
-import { rowsToCSV, downloadCSV, csvToRows } from './shapes/csvExport.js';
+import { PointShape } from '../shapes/PointShape.js';
+import { LineShape } from '../shapes/LineShape.js';
+import { RectShape } from '../shapes/RectShape.js';
+import { EllipseShape } from '../shapes/EllipseShape.js';
+import { LineWithCirclesShape } from '../shapes/LineWithCirclesShape.js';
+import { CubeWireframeShape } from '../shapes/CubeWireframeShape.js';
+import { ShapeContainer } from './ShapeContainer.js';
+import { rowsToCSV, downloadCSV, csvToRows } from '../utils/csvUtils.js';
 
 const SHAPE_NAMES = {
   point: 'Крапка', line: 'Лінія', rect: 'Прямокутник', ellipse: 'Еліпс',
@@ -27,12 +26,16 @@ export class MyEditor {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.titleEl = titleEl;
+
     this.shapes = new ShapeContainer();
     this.currentShapeType = 'rect';
+
     this.isDragging = false;
     this.startX = 0;
     this.startY = 0;
     this.selectedIndex = null;
+
+    this.onShapesChange = null;
 
     this._onMouseDown = this._onMouseDown.bind(this);
     this._onMouseMove = this._onMouseMove.bind(this);
@@ -43,15 +46,6 @@ export class MyEditor {
     this.canvas.addEventListener('mousemove', this._onMouseMove);
     this.canvas.addEventListener('mouseup', this._onMouseUp);
     this.canvas.addEventListener('mouseleave', this._onMouseLeave);
-
-    this.table = new MyTable(
-      document.body,
-      (index) => {
-        this.selectedIndex = index;
-        this.redraw();
-      },
-      (index) => this.deleteShape(index)
-    );
 
     this._updateTitle();
     this.redraw();
@@ -83,14 +77,25 @@ export class MyEditor {
     this.shapes.clear();
     this.selectedIndex = null;
     this.redraw();
-    this._refreshTable();
+    this.notifyChange();
   }
 
   deleteShape(index) {
     if (!this.shapes.remove(index)) return;
     this.selectedIndex = null;
     this.redraw();
-    this._refreshTable();
+    this.notifyChange();
+  }
+
+  selectShape(index) {
+    this.selectedIndex = index;
+    this.redraw();
+  }
+
+  notifyChange() {
+    if (this.onShapesChange) {
+      this.onShapesChange(this._getRows(), this.selectedIndex);
+    }
   }
 
   exportCSV() {
@@ -99,28 +104,29 @@ export class MyEditor {
 
   importCSV(text) {
     const { rows, skipped: badLines } = csvToRows(text);
-
     const loaded = [];
     let skipped = badLines;
+
     for (const row of rows) {
       const shape = this._createFromRow(row);
       if (shape) loaded.push(shape);
-      else skipped++;         
+      else skipped++;
     }
 
     if (loaded.length === 0) return { added: 0, skipped, overflow: 0 };
 
     this.shapes.clear();
     this.selectedIndex = null;
+
     let added = 0;
     let overflow = 0;
     for (const shape of loaded) {
       if (this.shapes.push(shape)) added++;
-      else overflow++;        
+      else overflow++;
     }
 
     this.redraw();
-    this._refreshTable();
+    this.notifyChange();
     return { added, skipped, overflow };
   }
 
@@ -130,10 +136,6 @@ export class MyEditor {
       rows.push({ name: shape.getTypeName(), ...shape.getBounds() });
     });
     return rows;
-  }
-
-  _refreshTable() {
-    this.table.setRows(this._getRows(), this.selectedIndex);
   }
 
   _updateTitle() {
@@ -198,7 +200,7 @@ export class MyEditor {
     if (this.currentShapeType === 'point') {
       this.shapes.push(new PointShape(x, y));
       this.redraw();
-      this._refreshTable();
+      this.notifyChange();
       return;
     }
     this.isDragging = true;
@@ -220,7 +222,7 @@ export class MyEditor {
     const shape = this._createShape(this.currentShapeType, this.startX, this.startY, x, y);
     if (shape) {
       this.shapes.push(shape);
-      this._refreshTable();
+      this.notifyChange();
     }
     this.redraw();
   }
@@ -245,7 +247,7 @@ export class MyEditor {
     this.canvas.removeEventListener('mouseleave', this._onMouseLeave);
     this.shapes.clear();
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.table.close();
+    this.onShapesChange = null;
     console.log("MyEditor: єдиний екземпляр знищено");
   }
 }
